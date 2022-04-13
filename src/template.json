@@ -1,0 +1,65 @@
+{
+    "ownable": {
+        "import": "import \"@openzeppelin/contracts/access/Ownable.sol\";\n",
+        "inheritance": ", Ownable"
+    },
+    "decimal": {
+        "function": "function decimals() public pure override returns(uint8){\nreturn ${DECIMAL};\n}"
+    },
+    "mintable": {
+        "function": "    function mint(address to, uint256 amount) public onlyOwner {\n        _mint(to, amount);\n    }\n",
+        "dependency": [
+            "ownable"
+        ]
+    },
+    "burnable": {
+        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol\";\n",
+        "inheritance": ", ERC20Burnable"
+    },
+    "permit": {
+        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol\";\n",
+        "superconstructor": "ERC20Permit(\"${name}\")",
+        "function": "           function getChainId() external view returns (uint256) {\n                return block.chainid;\n    }\n",
+        "inheritance": ", ERC20Permit",
+        "priority": 1
+    },
+    "flashminting": {
+        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol\";\n",
+        "inheritance": ", ERC20FlashMint"
+    },
+    "pausable": {
+        "import": "import \"@openzeppelin/contracts/security/Pausable.sol\";\n",
+        "inheritance": ", Pausable",
+        "dependency": [
+            "ownable",
+            "beforeTokenTransfer"
+        ],
+        "function": "function pause() public onlyOwner {\n        _pause();\n    }\n\n    function unpause() public onlyOwner {\n        _unpause();\n    }\n",
+        "replacement": {
+            "TOKENTRANSFERPROPERTY": "      whenNotPaused\n"
+        }
+    },
+    "snapshots": {
+        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol\";\n",
+        "inheritance": ", ERC20Snapshot",
+        "dependency": [
+            "ownable",
+            "beforeTokenTransfer"
+        ],
+        "function": "function snapshot() public onlyOwner {\n        _snapshot();\n    }\n\n        function getCurrentSnapshotId() public view returns (uint) {\n            return _getCurrentSnapshotId();\n        }\n",
+        "replacement": {
+            "OVERRIDE": "(ERC20, ERC20Snapshot)"
+        }
+    },
+    "vote": {
+        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol\";\n",
+        "inheritance": ", ERC20Votes",
+        "dependency": [
+            "permit"
+        ],
+        "function": "function _afterTokenTransfer(address from, address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._afterTokenTransfer(from, to, amount);\n    }\n\n    function _mint(address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._mint(to, amount);\n    }\n\n    function _burn(address account, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._burn(account, amount);\n    }\n"
+    },
+    "beforeTokenTransfer": {
+        "function": "    function _beforeTokenTransfer(address from, address to, uint256 amount)\n        internal\n${TOKENTRANSFERPROPERTY}        override${OVERRIDE}\n    {\n        super._beforeTokenTransfer(from, to, amount);\n    }\n"
+    }
+}
