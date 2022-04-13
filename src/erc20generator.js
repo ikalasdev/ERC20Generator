@@ -121,6 +121,29 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 
 }
 
-module.exports = { createERC20Contract };
+
+async function deployERC20Contract(name, symbol, inicialSupply, decimal, options) {
+    createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
+
+    await hre.run('compile');
+
+    const [deployer] = await ethers.getSigners();
+
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    console.log("Account balance:", (await deployer.getBalance()).toString());
+
+    const smartContractFactory = await ethers.getContractFactory(name);
+    const smartContract = await smartContractFactory.deploy();
+
+    await smartContract.deployed();
+
+    console.log("Token address:", smartContract.address);
+
+    return smartContract;
+}
+
+
+module.exports = { createERC20Contract, deployERC20Contract };
 
 
