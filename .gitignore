@@ -9,3 +9,4 @@ typechain
 #Hardhat files
 cache
 artifacts
+contracts/erc20contract.sol
