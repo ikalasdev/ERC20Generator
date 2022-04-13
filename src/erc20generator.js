@@ -1,12 +1,9 @@
-const fs = require('fs')
+const fs = require('fs');
+const { ethers } = require('hardhat');
 const hre = require("hardhat");
-require('dotenv').config();
 
 const pathFile = "./contracts/erc20contract.sol"
-const pathTemplate = "./src/template.json";
-
-let rawdata = fs.readFileSync(pathTemplate);
-let modulesList = JSON.parse(rawdata);
+let modulesList = require("./template.json");
 
 
 
@@ -26,7 +23,14 @@ function modulesToAdd(modules, options) {
 
 function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = []) {
 
-    var template = fs.readFileSync(`./src/erc20contractTemplate.sol`).toString();
+    try {
+        const fs = require('fs');
+        let nodeModule = require.resolve('@ikalasdev/erc20generator/src/erc20contractTemplate.sol');
+        var template = fs.readFileSync(nodeModule).toString();
+    } catch (error) {
+        const fs = require('fs');
+        var template = fs.readFileSync(`./src/erc20contractTemplate.sol`).toString();
+    }
 
     var modules = Array();
     modules = modulesToAdd(modules, options);
@@ -90,6 +94,12 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     template = template.replaceAll(regex, "");
 
     // console.log(template);
+
+    var fs = require('fs');
+    var dir = './contracts';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
     fs.writeFile(pathFile, template, err => {
         if (err) {
             console.error(err)
