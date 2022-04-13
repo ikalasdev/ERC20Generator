@@ -15,7 +15,7 @@ Installation is done using the
 [`npm install @ikalasdev/erc20generator` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
 
 
-This module need to be in a [hardhat projet](https://hardhat.org/getting-started/).
+This module need to be in a [hardhat project](https://hardhat.org/getting-started/).
 
 create hardhat project with 
 [`npx hardhat` command](https://hardhat.org/getting-started/)
