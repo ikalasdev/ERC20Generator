@@ -137,8 +137,8 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 
 }
 
-//privateKey and rpc is optional
-//if you don't specify the network hardhat will use the default network
+
+
 async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, privateKey, rpc) {
     name = name.toLowerCase();
     const configText = fs.readFileSync('./hardhat.config.js').toString();
@@ -146,8 +146,13 @@ async function deployERC20Contract(name, symbol, inicialSupply, decimal, options
         console.error("you must include hardhat-waffle in your hardhat.config.js");
         return;
     }
-    if (privateKey && rpc) {
-        const networkName = addNetworkToHardhat(privateKey, rpc);
+    if (privateKey) {
+        let networkName;
+        if (rpc) {
+            networkName = addNetworkToHardhat(privateKey, rpc);
+        } else {
+            networkName = privateKey;
+        }
         require("./networkSwitcher.js");
         hre.changeNetwork(networkName);
     }
