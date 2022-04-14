@@ -132,7 +132,14 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 }
 
 
-async function deployERC20Contract(name, symbol, inicialSupply, decimal, options) {
+async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, networkName) {
+
+    if (networkName) {
+        require("./networkSwitcher.js");
+        hre.changeNetwork(networkName);
+    }
+
+
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
 
     await hre.run('compile');

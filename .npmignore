@@ -4,3 +4,4 @@ contracts
 artifacts
 cache
 hardhat.config.js
+.env

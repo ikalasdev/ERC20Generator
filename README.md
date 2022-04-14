@@ -21,6 +21,15 @@ create hardhat project with
 [`npx hardhat` command](https://hardhat.org/getting-started/)
 
 
+## Network
+
+- you can specify the network to use with the `--network` flag.
+``npx hardhat run .\mySuperScript.js --network mySuperBlockchain``
+- or you can specify the network name in the fonction parameters
+```js
+const network = "mySuperBlockchain";
+deployERC20Contract(name, symbol, inicialSupply, decimals, options, network);
+```
 ## Examples
 
 ```js
