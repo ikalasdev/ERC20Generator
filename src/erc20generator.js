@@ -23,6 +23,11 @@ function modulesToAdd(modules, options) {
 
 function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = []) {
 
+
+    if (!hre.config.solidity.compilers[0].version.match(/^[0-9]+\.(([8-9])|([1-9]([0-9])+))\..*/)) {
+        throw new Error("solidity compiler version must be >= 0.8.0");
+    }
+
     try {
         const fs = require('fs');
         let nodeModule = require.resolve('@ikalasdev/erc20generator/src/erc20contractTemplate.sol');
@@ -117,6 +122,8 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
 
 async function createERC20Contract(name, symbol, inicialSupply, decimal, options) {
 
+
+
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
     await hre.run('compile');
     const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
@@ -133,6 +140,7 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 
 
 async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, networkName) {
+
 
     if (networkName) {
         require("./networkSwitcher.js");

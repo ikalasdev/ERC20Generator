@@ -20,6 +20,7 @@ This module need to be in a [hardhat project](https://hardhat.org/getting-starte
 create hardhat project with 
 [`npx hardhat` command](https://hardhat.org/getting-started/)
 
+check soldity compiler version is >= 0.8.0 in hardhat.config.js
 
 ## Network
 
