@@ -10,7 +10,11 @@ If this is a brand new project, make sure to create a `package.json` first with
 the ``npm init``  [command](https://docs.npmjs.com/creating-a-package-json-file).
 
 2.  **This module need to be in a** [**hardhat project**](https://hardhat.org/getting-started/).  
-[create hardhat project](https://hardhat.org/getting-started/) with ``npx hardhat`` 
+[create hardhat project](https://hardhat.org/getting-started/) with 
+```
+npm install hardhat --save-dev
+npx hardhat
+```
 
 3. install the module using
 ```bash
