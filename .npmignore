@@ -5,3 +5,4 @@ artifacts
 cache
 hardhat.config.js
 .env
+test.js

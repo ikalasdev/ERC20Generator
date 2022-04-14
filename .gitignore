@@ -10,3 +10,4 @@ typechain
 cache
 artifacts
 contracts/erc20contract.sol
+test.js

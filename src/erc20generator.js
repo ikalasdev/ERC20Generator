@@ -121,8 +121,7 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
 
 
 async function createERC20Contract(name, symbol, inicialSupply, decimal, options) {
-
-
+    name = name.toLowerCase();
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
     await hre.run('compile');
@@ -138,11 +137,17 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 
 }
 
-
-async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, networkName) {
-
-
-    if (networkName) {
+//privateKey and rpc is optional
+//if you don't specify the network hardhat will use the default network
+async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, privateKey, rpc) {
+    name = name.toLowerCase();
+    const configText = fs.readFileSync('./hardhat.config.js').toString();
+    if (!configText.includes("require(\"@nomiclabs/hardhat-waffle\");")) {
+        console.error("you must include hardhat-waffle in your hardhat.config.js");
+        return;
+    }
+    if (privateKey && rpc) {
+        const networkName = addNetworkToHardhat(privateKey, rpc);
         require("./networkSwitcher.js");
         hre.changeNetwork(networkName);
     }
@@ -168,6 +173,24 @@ async function deployERC20Contract(name, symbol, inicialSupply, decimal, options
     return smartContract;
 }
 
+function addNetworkToHardhat(privateKey, rpcUrl) {
+    if (!privateKey.match(/^0x[0-9a-fA-F]{64}$/)) {
+        privateKey = "0x" + privateKey;
+    }
+    const network = {
+        accounts: [
+            `${privateKey}`
+        ],
+        gas: 'auto',
+        gasPrice: 'auto',
+        gasMultiplier: 1,
+        httpHeaders: {},
+        timeout: 20000,
+        url: `${rpcUrl}`
+    }
+    hre.config.networks.network = network;
+    return "network";
+}
 
 module.exports = { createERC20Contract, deployERC20Contract };
 

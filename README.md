@@ -3,22 +3,19 @@
 
 ## Installation
 
-This is a [Node.js](https://nodejs.org/en/) module available through the
+1. This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/).
-
-Before installing, [download and install Node.js](https://nodejs.org/en/download/).
-
+Before installing, [download and install Node.js](https://nodejs.org/en/download/). 
 If this is a brand new project, make sure to create a `package.json` first with
-the [`npm init` command](https://docs.npmjs.com/creating-a-package-json-file).
+the ``npm init``  [command](https://docs.npmjs.com/creating-a-package-json-file).
 
-Installation is done using the
-[`npm install @ikalasdev/erc20generator` command](https://docs.npmjs.com/getting-started/installing-npm-packages-locally):
+2.  **This module need to be in a** [**hardhat project**](https://hardhat.org/getting-started/).  
+[create hardhat project](https://hardhat.org/getting-started/) with ``npx hardhat`` 
 
-
-This module need to be in a [hardhat project](https://hardhat.org/getting-started/).
-
-create hardhat project with 
-[`npx hardhat` command](https://hardhat.org/getting-started/)
+3. install the module using
+```bash
+npm install @ikalasdev/erc20generator
+```
 
 check soldity compiler version is >= 0.8.0 in hardhat.config.js
 
@@ -27,12 +24,28 @@ add require('@nomiclabs/hardhat-waffle') in your hardhat.config.js if you don't 
 ## Network
 - [To deploy to a remote network such as mainnet or any testnet, you need to add a network entry to your hardhat.config.js](https://hardhat.org/tutorial/deploying-to-a-live-network.html#deploying-to-remote-networks)
 
-- you can specify the network to use with the `--network` flag.
-``npx hardhat run .\mySuperScript.js --network mySuperBlockchain``
-- or you can specify the network name in the fonction parameters
+exemple of hardhat config for binance testnet:
 ```js
-const network = "mySuperBlockchain";
-deployERC20Contract(name, symbol, inicialSupply, decimals, options, network);
+module.exports = {
+  solidity: "0.8.4",
+  networks: {
+    bsc: {
+      url: `https://data-seed-prebsc-1-s1.binance.org:8545/`,
+      accounts: [`${YOURPRIVATE_KEY}`]
+    }
+  }
+};
+```
+
+- you can specify the network to use with the `--network` flag.
+```
+npx hardhat run .\mySuperScript.js --network mySuperBlockchain
+```
+- or you can specify the network rpc and the private key in the fonction parameters
+```js
+const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
+const privateKey = `${YOURPRIVATE_KEY}`;
+deployERC20Contract(name, symbol, inicialSupply, decimals, options, privateKey, rpc);
 ```
 
 
@@ -44,22 +57,26 @@ const erc20Generator = require('@ikalasdev/erc20generator');
 //specify the contract properties
 const name = "MyToken";
 const symbol = "MTK";
-const inicialSupply = 10000;
+const initialSupply = 10000;
 const decimals = 18;
 //all available options :
 const options =  ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"];
 ```
 
-- generate new Contract to deploy
+generate new Contract to deploy
 ```js
 //contract contains all the information to deploy the contract (bytecode, abi, ...)
-const contract = await generator.createERC20Contract(name, symbol, inicialSupply, decimals, options);
+const contract = await erc20Generator.createERC20Contract(name, symbol, initialSupply, decimals, options);
 //for example see https://docs.ethers.io/v4/api-contract.html to deploy it 
 ```
-
-- directly deploy new erc20 contract with hardhat
+#### OR 
+directly deploy new erc20 contract with hardhat
 ```js
-const token = await generator.deployERC20Contract(name, symbol, inicialSupply, decimals, options);
+const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
+const privateKey = `${YOURPRIVATE_KEY}`;
+
+//if you don't specify the privateKey and the rpc hardhat will use the default network in your hardhat.config.js
+const token = await erc20Generator.deployERC20Contract(name, symbol, inicialSupply, decimals, options, privateKey, rpc);
 ```
   
 Want to see more ? [Check the test code in the repository](https://github.com/ikalasdev/ERC20Generator)
