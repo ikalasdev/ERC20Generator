@@ -22,7 +22,10 @@ create hardhat project with
 
 check soldity compiler version is >= 0.8.0 in hardhat.config.js
 
+add require('@nomiclabs/hardhat-waffle') in your hardhat.config.js if you don't have it
+
 ## Network
+- [To deploy to a remote network such as mainnet or any testnet, you need to add a network entry to your hardhat.config.js](https://hardhat.org/tutorial/deploying-to-a-live-network.html#deploying-to-remote-networks)
 
 - you can specify the network to use with the `--network` flag.
 ``npx hardhat run .\mySuperScript.js --network mySuperBlockchain``
@@ -31,6 +34,8 @@ check soldity compiler version is >= 0.8.0 in hardhat.config.js
 const network = "mySuperBlockchain";
 deployERC20Contract(name, symbol, inicialSupply, decimals, options, network);
 ```
+
+
 ## Examples
 
 ```js
