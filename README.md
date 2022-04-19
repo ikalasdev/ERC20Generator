@@ -80,7 +80,7 @@ const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
 const privateKey = `${YOURPRIVATE_KEY}`;
 
 //if you don't specify the privateKey and the rpc hardhat will use the default network in your hardhat.config.js
-const token = await erc20Generator.deployERC20Contract(name, symbol, inicialSupply, decimals, options, privateKey, rpc);
+const token = await erc20Generator.deployERC20Contract(name, symbol, initialSupply, decimals, options, privateKey, rpc);
 ```
   
 Want to see more ? [Check the test code in the repository](https://github.com/ikalasdev/ERC20Generator)
