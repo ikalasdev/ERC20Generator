@@ -11,7 +11,7 @@
     "url": "git+https://github.com/ikalasdev/ERC20Generator.git"
   },
   "author": "Ikalas",
-  "license": "SEE LICENSE IN EACH PACKAGE'S LICENSE FILE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ikalasdev/ERC20Generator/issues"
   },
