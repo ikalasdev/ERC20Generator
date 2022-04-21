@@ -22,7 +22,15 @@ describe(" erc20 contract test on remote network with network name as parameter"
 
         [deployer] = await ethers.getSigners();
 
-        token = await generator.deployERC20Contract(name, symbol, inicialSupply, 18, options, "smartchain");
+        const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 18,
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+            network: "smartchain"
+        };
+        token = await generator.deployERC20Contract(parameters);
 
         const borrowerTokenFactory = await ethers.getContractFactory("borrower");
         borrowerToken = await borrowerTokenFactory.deploy();
@@ -72,8 +80,16 @@ describe("erc20 contract test with remote network and private key,url as paramet
     it("should deploy the contract", async function () {
 
         [deployer] = await ethers.getSigners();
-
-        token = await generator.deployERC20Contract(name, symbol, inicialSupply, 18, options, process.env.PRIVATE_KEY, "https://data-seed-prebsc-1-s1.binance.org:8545/");
+        const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 18,
+            options: options,
+            privateKey: process.env.PRIVATE_KEY,
+            rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        };
+        token = await generator.deployERC20Contract(parameters);
 
         const borrowerTokenFactory = await ethers.getContractFactory("borrower");
         borrowerToken = await borrowerTokenFactory.deploy();

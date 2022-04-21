@@ -10,7 +10,7 @@ const symbol = "MT";
 const inicialSupply = 1000000;
 
 
-describe("full erc20 contract test", function () {
+describe("full erc20 contract local test", function () {
 
     let owner;
     let addr1;
@@ -24,7 +24,14 @@ describe("full erc20 contract test", function () {
     beforeEach(async function () {
         [owner, addr1, addr2, addr3, ...addrs] = await ethers.getSigners();
 
-        await generator.createERC20Contract(name, symbol, inicialSupply, 18, ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]);
+        const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 18,
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+        };
+        await generator.createERC20Contract(parameters);
 
         const tokenFactory = await ethers.getContractFactory(name);
         token = await tokenFactory.deploy();

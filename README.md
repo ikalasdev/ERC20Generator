@@ -59,28 +59,31 @@ deployERC20Contract(name, symbol, inicialSupply, decimals, options, privateKey, 
 //import the module
 const erc20Generator = require('@ikalasdev/erc20generator');
 //specify the contract properties
-const name = "MyToken";
-const symbol = "MTK";
-const initialSupply = 10000;
-const decimals = 18;
-//all available options :
-const options =  ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"];
+const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 18,
+            //optional parameters
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+            network: "smartchain",
+            privateKey: process.env.PRIVATE_KEY,
+            rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+            futurOwner: addr1.address,
+};
 ```
 
 generate new Contract to deploy
 ```js
 //contract contains all the information to deploy the contract (bytecode, abi, ...)
-const contract = await erc20Generator.createERC20Contract(name, symbol, initialSupply, decimals, options);
+const contract = await erc20Generator.createERC20Contract(parameters);
 //for example see https://docs.ethers.io/v4/api-contract.html to deploy it 
 ```
 #### OR 
 directly deploy new erc20 contract with hardhat
 ```js
-const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
-const privateKey = `${YOURPRIVATE_KEY}`;
-
 //if you don't specify the privateKey and the rpc hardhat will use the default network in your hardhat.config.js
-const token = await erc20Generator.deployERC20Contract(name, symbol, initialSupply, decimals, options, privateKey, rpc);
+const token = await erc20Generator.deployERC20Contract(parameters);
 ```
   
 Want to see more ? [Check the test code in the repository](https://github.com/ikalasdev/ERC20Generator)

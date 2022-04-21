@@ -120,7 +120,12 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
 
 
 
-async function createERC20Contract(name, symbol, inicialSupply, decimal, options) {
+async function createERC20Contract(parameters) {
+    let name = parameters.name;
+    let symbol = parameters.symbol;
+    let inicialSupply = parameters.inicialSupply;
+    let decimal = parameters.decimal;
+    let options = parameters.options;
     name = name.toLowerCase();
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
@@ -139,7 +144,18 @@ async function createERC20Contract(name, symbol, inicialSupply, decimal, options
 
 
 
-async function deployERC20Contract(name, symbol, inicialSupply, decimal, options, privateKey, rpc) {
+//parameters name, symbol, inicialSupply, decimal, options, privateKey, rpc
+async function deployERC20Contract(parameters) {
+    let name = parameters.name;
+    let symbol = parameters.symbol;
+    let inicialSupply = parameters.inicialSupply;
+    let decimal = parameters.decimal;
+    let options = parameters.options;
+    let privateKey = parameters.privateKey;
+    let rpc = parameters.rpc;
+    let networkName = parameters.network;
+    let futurOwner = parameters.futurOwner;
+
     name = name.toLowerCase();
     const configText = fs.readFileSync('./hardhat.config.js').toString();
     if (!configText.includes("require(\"@nomiclabs/hardhat-waffle\");")) {
@@ -147,12 +163,13 @@ async function deployERC20Contract(name, symbol, inicialSupply, decimal, options
         return;
     }
     if (privateKey) {
-        let networkName;
         if (rpc) {
             networkName = addNetworkToHardhat(privateKey, rpc);
         } else {
             networkName = privateKey;
         }
+    }
+    if (networkName) {
         require("./networkSwitcher.js");
         hre.changeNetwork(networkName);
     }
@@ -174,7 +191,9 @@ async function deployERC20Contract(name, symbol, inicialSupply, decimal, options
     await smartContract.deployed();
 
     console.log("Token address:", smartContract.address);
-
+    if (futurOwner) {
+        await smartContract.transferOwnership(futurOwner);
+    }
     return smartContract;
 }
 

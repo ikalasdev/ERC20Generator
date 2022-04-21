@@ -25,7 +25,14 @@ describe("full erc20 contract test", function () {
     beforeEach(async function () {
         [deployer, addr1, addr2, addr3, ...addrs] = await ethers.getSigners();
 
-        token = await generator.deployERC20Contract(name, symbol, inicialSupply, 18, ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]);
+        const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 18,
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
+        };
+        token = await generator.deployERC20Contract(parameters);
 
         const borrowerTokenFactory = await ethers.getContractFactory("borrower");
         borrowerToken = await borrowerTokenFactory.deploy();
