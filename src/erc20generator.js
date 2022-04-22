@@ -21,7 +21,7 @@ function modulesToAdd(modules, options) {
 }
 
 
-function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = []) {
+function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = [], futurOwner) {
 
 
     if (!hre.config.solidity.compilers[0].version.match(/^[0-9]+\.(([8-9])|([1-9]([0-9])+))\..*/)) {
@@ -83,7 +83,7 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     template = template.replaceAll("${FUNCTIONS}", funtionModules);
 
 
-
+    template = template.replaceAll("${OWNER}", futurOwner ? futurOwner : "msg.sender");
     template = template.replaceAll("${TOKENNAME}", name);
     template = template.replaceAll("${TOKENSYMBOL}", symbol);
     template = template.replaceAll("${INITIALSUPPLY}", inicialSupply);
@@ -126,9 +126,10 @@ async function createERC20Contract(parameters) {
     let inicialSupply = parameters.inicialSupply;
     let decimal = parameters.decimal;
     let options = parameters.options;
+    let futurOwner = parameters.futurOwner;
     name = name.toLowerCase();
 
-    createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
+    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
     await hre.run('compile');
     const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
     const soldityCode = fs.readFileSync(`./contracts/erc20contract.sol`).toString();
@@ -175,7 +176,7 @@ async function deployERC20Contract(parameters) {
     }
 
 
-    createERC20ContractFile(name, symbol, inicialSupply, decimal, options);
+    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
 
     await hre.run('compile');
 

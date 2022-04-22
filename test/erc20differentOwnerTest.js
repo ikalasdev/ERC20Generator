@@ -32,18 +32,19 @@ describe("should deploy the contract", async function () {
             inicialSupply: inicialSupply,
             decimal: 18,
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
-            network: "smartchain",
             futurOwner: addr1.address
         };
         token = await generator.deployERC20Contract(parameters);
 
-        const borrowerTokenFactory = await ethers.getContractFactory("borrower");
-        borrowerToken = await borrowerTokenFactory.deploy();
-        await borrowerToken.deployed();
     });
     it("shoud have the correct deployer", async function () {
         const Tokendeployer = await token.owner();
         expect(Tokendeployer).to.equal(addr1.address);
+    });
+
+    it("the futur owner should have the correct supply", async function () {
+        const Tokendeployer = await token.balanceOf(addr1.address);
+        expect(Tokendeployer).to.equal(ethers.utils.parseEther(inicialSupply.toString()).toString());
     });
 });
 

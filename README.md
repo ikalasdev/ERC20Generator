@@ -49,7 +49,7 @@ npx hardhat run .\mySuperScript.js --network mySuperBlockchain
 ```js
 const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
 const privateKey = `${YOURPRIVATE_KEY}`;
-deployERC20Contract(name, symbol, inicialSupply, decimals, options, privateKey, rpc);
+deployERC20Contract(name, symbol, initialSupply, decimals, options, privateKey, rpc);
 ```
 
 
@@ -62,14 +62,14 @@ const erc20Generator = require('@ikalasdev/erc20generator');
 const parameters = {
             name: name,
             symbol: symbol,
-            inicialSupply: inicialSupply,
+            initialSupply: initialSupply,
             decimal: 18,
             //optional parameters
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
             network: "smartchain",
-            privateKey: process.env.PRIVATE_KEY,
+            privateKey: YOUR_PRIVATE_KEY,
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-            futurOwner: addr1.address,
+            futurOwner: "0x324..",
 };
 ```
 
