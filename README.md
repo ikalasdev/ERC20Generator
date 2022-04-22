@@ -46,12 +46,6 @@ module.exports = {
 npx hardhat run .\mySuperScript.js --network mySuperBlockchain
 ```
 - or you can specify the network rpc and the private key in the fonction parameters
-```js
-const rpc = `https://data-seed-prebsc-1-s1.binance.org:8545/`;
-const privateKey = `${YOURPRIVATE_KEY}`;
-deployERC20Contract(name, symbol, initialSupply, decimals, options, privateKey, rpc);
-```
-
 
 ## Examples
 
