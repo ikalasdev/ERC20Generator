@@ -43,7 +43,7 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     modules = modulesToAdd(modules, options);
 
     if (decimal != 18) {
-        modules.push(modulesData.decimal);
+        modules.push(modulesList[`decimal`]);
     }
 
     //import

@@ -263,3 +263,39 @@ describe("full erc20 contract local test", function () {
     });
 });
 
+
+
+describe("check decimal", function () {
+
+    let owner;
+    let addr1;
+    let addr2;
+    let addr3;
+    let addrs;
+    let token;
+
+    beforeEach(async function () {
+        [owner, addr1, addr2, addr3, ...addrs] = await ethers.getSigners();
+
+        const parameters = {
+            name: name,
+            symbol: symbol,
+            inicialSupply: inicialSupply,
+            decimal: 9,
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+        };
+        await generator.createERC20Contract(parameters);
+
+        const tokenFactory = await ethers.getContractFactory(name.replaceAll(" ", ""));
+        token = await tokenFactory.deploy();
+        await token.deployed();
+
+    });
+
+
+    it("should have the correct decimal", async function () {
+        const decimal = await token.decimals();
+        expect(decimal.toString()).to.equal("9");
+    });
+
+});
