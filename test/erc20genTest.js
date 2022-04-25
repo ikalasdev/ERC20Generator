@@ -5,7 +5,7 @@ const generator = require('../src/erc20generator.js');
 //option available:
 //["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
 
-const name = "mytoken";
+const name = "My Super token";
 const symbol = "MT";
 const inicialSupply = 1000000;
 
@@ -33,7 +33,7 @@ describe("full erc20 contract local test", function () {
         };
         await generator.createERC20Contract(parameters);
 
-        const tokenFactory = await ethers.getContractFactory(name);
+        const tokenFactory = await ethers.getContractFactory(name.replaceAll(" ", ""));
         token = await tokenFactory.deploy();
         await token.deployed();
 
@@ -50,6 +50,7 @@ describe("full erc20 contract local test", function () {
 
         it("should have the correct name", async function () {
             const name = await token.name();
+            console.log("name   : " + name);
             expect(name).to.equal(name);
         });
 

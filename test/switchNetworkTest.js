@@ -20,7 +20,6 @@ describe(" erc20 contract test on remote network with network name as parameter"
 
     it("should deploy the contract", async function () {
 
-        [deployer] = await ethers.getSigners();
 
         const parameters = {
             name: name,
@@ -31,39 +30,29 @@ describe(" erc20 contract test on remote network with network name as parameter"
             network: "smartchain"
         };
         token = await generator.deployERC20Contract(parameters);
+        [deployer] = await ethers.getSigners();
 
-        const borrowerTokenFactory = await ethers.getContractFactory("borrower");
-        borrowerToken = await borrowerTokenFactory.deploy();
-        await borrowerToken.deployed();
+        const nameToken = await token.name();
+        expect(nameToken).to.equal(name);
 
-        it("should have the correct name", async function () {
-            const name = await token.name();
-            expect(name).to.equal(name);
-        });
+        const symbolToken = await token.symbol();
+        expect(symbolToken).to.equal(symbol);
 
-        it("should have the correct symbol", async function () {
-            const symbol = await token.symbol();
-            expect(symbol).to.equal(symbol);
-        });
+        const totalSupply = await token.totalSupply();
+        expect(totalSupply.toString()).to.equal(ethers.utils.parseEther(inicialSupply.toString()).toString());
 
-        it("should have the correct inicial supply", async function () {
-            const totalSupply = await token.totalSupply();
-            expect(totalSupply.toString()).to.equal(ethers.utils.parseEther(inicialSupply.toString()).toString());
-        });
+        const decimalToken = await token.decimals();
+        expect(decimalToken.toString()).to.equal("18");
 
-        it("should have the correct decimal", async function () {
-            const decimal = await token.decimals();
-            expect(decimal.toString()).to.equal("18");
-        });
-
-        it("shoud have the correct deployer", async function () {
-            const Tokendeployer = await token.owner();
-            expect(Tokendeployer).to.equal(deployer.address);
-        });
+        const Tokendeployer = await token.owner();
+        console.log("owner : ", Tokendeployer.toString());
+        expect(Tokendeployer).to.equal(deployer.address);
 
     });
 
 });
+
+
 
 
 describe("erc20 contract test with remote network and private key,url as parameter", function () {
@@ -79,7 +68,6 @@ describe("erc20 contract test with remote network and private key,url as paramet
 
     it("should deploy the contract", async function () {
 
-        [deployer] = await ethers.getSigners();
         const parameters = {
             name: name,
             symbol: symbol,
@@ -90,37 +78,24 @@ describe("erc20 contract test with remote network and private key,url as paramet
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/"
         };
         token = await generator.deployERC20Contract(parameters);
+        [deployer] = await ethers.getSigners();
 
-        const borrowerTokenFactory = await ethers.getContractFactory("borrower");
-        borrowerToken = await borrowerTokenFactory.deploy();
-        await borrowerToken.deployed();
+        const nameToken = await token.name();
+        expect(nameToken).to.equal(name);
 
-        it("should have the correct name", async function () {
-            const name = await token.name();
-            expect(name).to.equal(name);
-        });
+        const symbolToken = await token.symbol();
+        expect(symbolToken).to.equal(symbol);
 
-        it("should have the correct symbol", async function () {
-            const symbol = await token.symbol();
-            expect(symbol).to.equal(symbol);
-        });
+        const totalSupplyToken = await token.totalSupply();
+        expect(totalSupplyToken.toString()).to.equal(ethers.utils.parseEther(inicialSupply.toString()).toString());
 
-        it("should have the correct inicial supply", async function () {
-            const totalSupply = await token.totalSupply();
-            expect(totalSupply.toString()).to.equal(ethers.utils.parseEther(inicialSupply.toString()).toString());
-        });
+        const decimalToken = await token.decimals();
+        expect(decimalToken.toString()).to.equal("18");
 
-        it("should have the correct decimal", async function () {
-            const decimal = await token.decimals();
-            expect(decimal.toString()).to.equal("18");
-        });
-
-        it("shoud have the correct deployer", async function () {
-            const Tokendeployer = await token.owner();
-            expect(Tokendeployer).to.equal(deployer.address);
-        });
+        const Tokendeployer = await token.owner();
+        console.log("owner : ", Tokendeployer.toString());
+        expect(Tokendeployer).to.equal(deployer.address);
 
     });
 
 });
-

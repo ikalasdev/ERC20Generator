@@ -23,6 +23,8 @@ function modulesToAdd(modules, options) {
 
 function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = [], futurOwner) {
 
+    let contractName = name.replaceAll(" ", "");
+
 
     if (!hre.config.solidity.compilers[0].version.match(/^[0-9]+\.(([8-9])|([1-9]([0-9])+))\..*/)) {
         throw new Error("solidity compiler version must be >= 0.8.0");
@@ -84,6 +86,7 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
 
 
     template = template.replaceAll("${OWNER}", futurOwner ? futurOwner : "msg.sender");
+    template = template.replaceAll("${CONTRACTNAME}", contractName);
     template = template.replaceAll("${TOKENNAME}", name);
     template = template.replaceAll("${TOKENSYMBOL}", symbol);
     template = template.replaceAll("${INITIALSUPPLY}", inicialSupply);
@@ -127,11 +130,13 @@ async function createERC20Contract(parameters) {
     let decimal = parameters.decimal;
     let options = parameters.options;
     let futurOwner = parameters.futurOwner;
-    name = name.toLowerCase();
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
+    let nameFile = name.replaceAll(" ", "");
+
+    await hre.run('clean');
     await hre.run('compile');
-    const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
+    const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${nameFile}.json`).toString());
     const soldityCode = fs.readFileSync(`./contracts/erc20contract.sol`).toString();
     return {
         ...contract,
@@ -157,7 +162,7 @@ async function deployERC20Contract(parameters) {
     let networkName = parameters.network;
     let futurOwner = parameters.futurOwner;
 
-    name = name.toLowerCase();
+
     const configText = fs.readFileSync('./hardhat.config.js').toString();
     if (!configText.includes("require(\"@nomiclabs/hardhat-waffle\");")) {
         console.error("you must include hardhat-waffle in your hardhat.config.js");
@@ -178,6 +183,8 @@ async function deployERC20Contract(parameters) {
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
 
+
+    await hre.run('clean');
     await hre.run('compile');
 
     const [deployer] = await ethers.getSigners();
@@ -186,7 +193,7 @@ async function deployERC20Contract(parameters) {
 
     console.log("Account balance:", (await deployer.getBalance()).toString());
 
-    const smartContractFactory = await ethers.getContractFactory(name);
+    const smartContractFactory = await ethers.getContractFactory(name.replaceAll(" ", ""));
     const smartContract = await smartContractFactory.deploy();
 
     await smartContract.deployed();
