@@ -30,6 +30,7 @@ describe(" erc20 contract test on remote network with network name as parameter"
             network: "smartchain"
         };
         token = await generator.deployERC20Contract(parameters);
+        token = token.contract;
         [deployer] = await ethers.getSigners();
 
         const nameToken = await token.name();
@@ -78,6 +79,7 @@ describe("erc20 contract test with remote network and private key,url as paramet
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/"
         };
         token = await generator.deployERC20Contract(parameters);
+        token = token.contract;
         [deployer] = await ethers.getSigners();
 
         const nameToken = await token.name();

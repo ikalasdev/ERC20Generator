@@ -130,12 +130,17 @@ async function createERC20Contract(parameters) {
     let decimal = parameters.decimal;
     let options = parameters.options;
     let futurOwner = parameters.futurOwner;
+    await hre.run("clean");
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
     let nameFile = name.replaceAll(" ", "");
 
-    await hre.run('clean');
-    await hre.run('compile');
+    try {
+        await hre.run('compile');
+    } catch (error) {
+        console.log("cache error retry command if it fail");
+    }
+
     const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${nameFile}.json`).toString());
     const soldityCode = fs.readFileSync(`./contracts/erc20contract.sol`).toString();
     return {
@@ -161,6 +166,7 @@ async function deployERC20Contract(parameters) {
     let rpc = parameters.rpc;
     let networkName = parameters.network;
     let futurOwner = parameters.futurOwner;
+    await hre.run("clean");
 
 
     const configText = fs.readFileSync('./hardhat.config.js').toString();
@@ -184,8 +190,11 @@ async function deployERC20Contract(parameters) {
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
 
 
-    await hre.run('clean');
-    await hre.run('compile');
+    try {
+        await hre.run('compile');
+    } catch (error) {
+        console.log("cache error retry command if it fail");
+    }
 
     const [deployer] = await ethers.getSigners();
 
@@ -199,10 +208,11 @@ async function deployERC20Contract(parameters) {
     await smartContract.deployed();
 
     console.log("Token address:", smartContract.address);
+    console.log("blockscan url:", `https://blockscan.com/address/${smartContract.address}`);
     if (futurOwner) {
         await smartContract.transferOwnership(futurOwner);
     }
-    return smartContract;
+    return { "adress": smartContract.address, "contract": smartContract, "url": `https://blockscan.com/address/${smartContract.address}` };
 }
 
 function addNetworkToHardhat(privateKey, rpcUrl) {

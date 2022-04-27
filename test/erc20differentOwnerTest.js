@@ -34,8 +34,9 @@ describe("should deploy the contract", async function () {
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
             futurOwner: addr1.address
         };
-        token = await generator.deployERC20Contract(parameters);
 
+        token = await generator.deployERC20Contract(parameters);
+        token = token.contract;
     });
     it("shoud have the correct deployer", async function () {
         const Tokendeployer = await token.owner();

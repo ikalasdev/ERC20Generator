@@ -1,7 +1,8 @@
 const { expect } = require("chai");
+const { hexStripZeros } = require("ethers/lib/utils");
 const { ethers } = require("hardhat");
 const generator = require('../src/erc20generator.js');
-
+const hre = require("hardhat");
 //option available:
 //["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
 

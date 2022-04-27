@@ -33,7 +33,7 @@ describe("full erc20 contract test", function () {
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
         };
         token = await generator.deployERC20Contract(parameters);
-
+        token = token.contract;
         const borrowerTokenFactory = await ethers.getContractFactory("borrower");
         borrowerToken = await borrowerTokenFactory.deploy();
         await borrowerToken.deployed();
