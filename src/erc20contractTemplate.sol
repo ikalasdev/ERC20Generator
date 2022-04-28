@@ -8,6 +8,7 @@ ${IMPORT}
 contract ${CONTRACTNAME} is ERC20 ${INHERITANCE}{
     constructor() ERC20("${TOKENNAME}", "${TOKENSYMBOL}") ${SUPERCONSTRUCTOR} {
         _mint(${OWNER}, ${INITIALSUPPLY} * 10 ** decimals());
+        ${INITIALISATION}
     }
 
     ${FUNCTIONS}

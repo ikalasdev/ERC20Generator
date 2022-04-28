@@ -21,7 +21,7 @@ function modulesToAdd(modules, options) {
 }
 
 
-function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = [], futurOwner) {
+function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = [], futurOwner, feeForTransaction) {
 
     let contractName = name.replaceAll(" ", "");
 
@@ -65,6 +65,15 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     template = template.replaceAll("${INHERITANCE}", inheritance);
 
     //superconstructor
+    var initialisation = "";
+    for (const module of modules) {
+        if (module && module.initialisation) {
+            initialisation += module.initialisation;
+        }
+    }
+    template = template.replaceAll("${INITIALISATION}", initialisation);
+
+    //initialisation
     var superconstructor = "";
     for (const module of modules) {
         if (module && module.superconstructor) {
@@ -72,7 +81,6 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
         }
     }
     template = template.replaceAll("${SUPERCONSTRUCTOR}", superconstructor);
-
 
 
     //fonction
@@ -86,11 +94,13 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
 
 
     template = template.replaceAll("${OWNER}", futurOwner ? futurOwner : "msg.sender");
+    template = template.replaceAll("${FEEFORTRANSACTION}", feeForTransaction ? feeForTransaction : "1");
     template = template.replaceAll("${CONTRACTNAME}", contractName);
     template = template.replaceAll("${TOKENNAME}", name);
     template = template.replaceAll("${TOKENSYMBOL}", symbol);
     template = template.replaceAll("${INITIALSUPPLY}", inicialSupply);
     template = template.replaceAll("${DECIMAL}", decimal);
+
     for (const module of modules) {
         if (module && module.replacement) {
             for (const key of Object.keys(module.replacement)) {
@@ -130,9 +140,10 @@ async function createERC20Contract(parameters) {
     let decimal = parameters.decimal;
     let options = parameters.options;
     let futurOwner = parameters.futurOwner;
+    let feeForTransaction = parameters.feeForTransaction;
     await hre.run("clean");
 
-    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
+    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction);
     let nameFile = name.replaceAll(" ", "");
 
     try {
@@ -166,6 +177,8 @@ async function deployERC20Contract(parameters) {
     let rpc = parameters.rpc;
     let networkName = parameters.network;
     let futurOwner = parameters.futurOwner;
+    let feeForTransaction = parameters.feeForTransaction;
+
     await hre.run("clean");
 
 
@@ -187,7 +200,7 @@ async function deployERC20Contract(parameters) {
     }
 
 
-    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner);
+    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction);
 
 
     try {

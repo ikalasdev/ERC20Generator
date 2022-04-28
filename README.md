@@ -59,7 +59,9 @@ const parameters = {
             initialSupply: initialSupply,
             decimal: 18,
             //optional parameters
-            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting", "holdersFee"],
+            //if you have the holdersfee option you need to specify the fee
+            feeForTransaction: "1",
             network: "smartchain",
             privateKey: YOUR_PRIVATE_KEY,
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
