@@ -44,53 +44,16 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     if (decimal != 18) {
         modules.push(modulesList[`decimal`]);
     }
-
-    //import
-    var importModule = "";
-    for (const module of modules) {
-        if (module && module.import) {
-            importModule += module.import;
+    var replacements = ["IMPORT", "INHERITANCE", "INITIALISATION", "SUPERCONSTRUCTOR", "FUNCTIONS"];
+    for (const replacement of replacements) {
+        var sourceCodeToAdd = "";
+        for (const module of modules) {
+            if (module && module[replacement]) {
+                sourceCodeToAdd += module[replacement];
+            }
         }
+        template = template.replaceAll(`\${${replacement}}`, sourceCodeToAdd);
     }
-    template = template.replaceAll("${IMPORT}", importModule);
-
-    //inheritance
-    var inheritance = "";
-    for (const module of modules) {
-        if (module && module.inheritance) {
-            inheritance += module.inheritance;
-        }
-    }
-    template = template.replaceAll("${INHERITANCE}", inheritance);
-
-    //superconstructor
-    var initialisation = "";
-    for (const module of modules) {
-        if (module && module.initialisation) {
-            initialisation += module.initialisation;
-        }
-    }
-    template = template.replaceAll("${INITIALISATION}", initialisation);
-
-    //initialisation
-    var superconstructor = "";
-    for (const module of modules) {
-        if (module && module.superconstructor) {
-            superconstructor += module.superconstructor;
-        }
-    }
-    template = template.replaceAll("${SUPERCONSTRUCTOR}", superconstructor);
-
-
-    //fonction
-    var funtionModules = "";
-    for (const module of modules) {
-        if (module && module.function) {
-            funtionModules += module.function;
-        }
-    }
-    template = template.replaceAll("${FUNCTIONS}", funtionModules);
-
 
     template = template.replaceAll("${OWNER}", futurOwner ? futurOwner : "msg.sender");
     template = template.replaceAll("${FEEFORTRANSACTION}", feeForTransaction ? feeForTransaction : "1");
@@ -140,7 +103,8 @@ async function createERC20Contract(parameters) {
     let options = parameters.options;
     let futurOwner = parameters.futurOwner;
     let feeForTransaction = parameters.feeForTransaction;
-    await hre.run("clean");
+
+    fs.rmSync("artifacts", { recursive: true, force: true });
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction);
     let nameFile = name.replaceAll(" ", "");
@@ -178,7 +142,7 @@ async function deployERC20Contract(parameters) {
     let futurOwner = parameters.futurOwner;
     let feeForTransaction = parameters.feeForTransaction;
 
-    await hre.run("clean");
+    fs.rmSync("artifacts", { recursive: true, force: true });
 
 
     const configText = fs.readFileSync('./hardhat.config.js').toString();
@@ -227,7 +191,7 @@ async function deployERC20Contract(parameters) {
     var network = await deployer.provider.getNetwork();
     network = blockchains.find(element => element.chainId == network.chainId);
     var url = "";
-    if (network.explorers) {
+    if (network) {
         url = `${network.explorers[0].url}/address/${smartContract.address}`;
         console.log("blockscan url:", url);
     } else {

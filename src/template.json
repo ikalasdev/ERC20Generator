@@ -1,69 +1,69 @@
 {
     "ownable": {
-        "import": "import \"@openzeppelin/contracts/access/Ownable.sol\";\n",
-        "inheritance": ", Ownable"
+        "IMPORT": "import \"@openzeppelin/contracts/access/Ownable.sol\";\n",
+        "INHERITANCE": ", Ownable"
     },
     "decimal": {
-        "function": "function decimals() public pure override returns(uint8){\nreturn ${DECIMAL};\n}"
+        "FUNCTIONS": "function decimals() public pure override returns(uint8){\nreturn ${DECIMAL};\n}"
     },
     "mintable": {
-        "function": "    function mint(address to, uint256 amount) public onlyOwner {\n        _mint(to, amount);\n    }\n",
+        "FUNCTIONS": "    function mint(address to, uint256 amount) public onlyOwner {\n        _mint(to, amount);\n    }\n",
         "dependency": [
             "ownable"
         ]
     },
     "burnable": {
-        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol\";\n",
-        "inheritance": ", ERC20Burnable"
+        "IMPORT": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol\";\n",
+        "INHERITANCE": ", ERC20Burnable"
     },
     "permit": {
-        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol\";\n",
-        "superconstructor": "ERC20Permit(\"${name}\")",
-        "function": "           function getChainId() external view returns (uint256) {\n                return block.chainid;\n    }\n",
-        "inheritance": ", ERC20Permit",
+        "IMPORT": "import \"@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol\";\n",
+        "SUPERCONSTRUCTOR": "ERC20Permit(\"${name}\")",
+        "FUNCTIONS": "           function getChainId() external view returns (uint256) {\n                return block.chainid;\n    }\n",
+        "INHERITANCE": ", ERC20Permit",
         "priority": 1
     },
     "flashminting": {
-        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol\";\n",
-        "inheritance": ", ERC20FlashMint"
+        "IMPORT": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol\";\n",
+        "INHERITANCE": ", ERC20FlashMint"
     },
     "pausable": {
-        "import": "import \"@openzeppelin/contracts/security/Pausable.sol\";\n",
-        "inheritance": ", Pausable",
+        "IMPORT": "import \"@openzeppelin/contracts/security/Pausable.sol\";\n",
+        "INHERITANCE": ", Pausable",
         "dependency": [
             "ownable",
             "beforeTokenTransfer"
         ],
-        "function": "function pause() public onlyOwner {\n        _pause();\n    }\n\n    function unpause() public onlyOwner {\n        _unpause();\n    }\n",
+        "FUNCTIONS": "function pause() public onlyOwner {\n        _pause();\n    }\n\n    function unpause() public onlyOwner {\n        _unpause();\n    }\n",
         "replacement": {
             "TOKENTRANSFERPROPERTY": "      whenNotPaused\n"
         }
     },
     "snapshots": {
-        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol\";\n",
-        "inheritance": ", ERC20Snapshot",
+        "IMPORT": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol\";\n",
+        "INHERITANCE": ", ERC20Snapshot",
         "dependency": [
             "ownable",
             "beforeTokenTransfer"
         ],
-        "function": "function snapshot() public onlyOwner {\n        _snapshot();\n    }\n\n        function getCurrentSnapshotId() public view returns (uint) {\n            return _getCurrentSnapshotId();\n        }\n",
+        "FUNCTIONS": "function snapshot() public onlyOwner {\n        _snapshot();\n    }\n\n        function getCurrentSnapshotId() public view returns (uint) {\n            return _getCurrentSnapshotId();\n        }\n",
         "replacement": {
             "OVERRIDE": "(ERC20, ERC20Snapshot)"
         }
     },
     "vote": {
-        "import": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol\";\n",
-        "inheritance": ", ERC20Votes",
+        "IMPORT": "import \"@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol\";\n",
+        "INHERITANCE": ", ERC20Votes",
         "dependency": [
             "permit"
         ],
-        "function": "function _afterTokenTransfer(address from, address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._afterTokenTransfer(from, to, amount);\n    }\n\n    function _mint(address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._mint(to, amount);\n    }\n\n    function _burn(address account, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._burn(account, amount);\n    }\n"
+        "FUNCTIONS": "function _afterTokenTransfer(address from, address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._afterTokenTransfer(from, to, amount);\n    }\n\n    function _mint(address to, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._mint(to, amount);\n    }\n\n    function _burn(address account, uint256 amount)\n        internal\n        override(ERC20, ERC20Votes)\n    {\n        super._burn(account, amount);\n    }\n"
     },
     "beforeTokenTransfer": {
-        "function": "    function _beforeTokenTransfer(address from, address to, uint256 amount)\n        internal\n${TOKENTRANSFERPROPERTY}        override${OVERRIDE}\n    {\n        super._beforeTokenTransfer(from, to, amount);\n    }\n"
+        "FUNCTIONS": "    function _beforeTokenTransfer(address from, address to, uint256 amount)\n        internal\n${TOKENTRANSFERPROPERTY}        override${OVERRIDE}\n    {\n        super._beforeTokenTransfer(from, to, amount);\n    }\n"
     },
     "holdersFee": {
-        "function": "    Transaction[] private transactions;\r\n    struct Transaction{\r\n        uint256 timestamp;\r\n        uint256 transactionFee;\r\n        uint256 holders;\r\n    }\r\n\r\n    uint256 totalfeeGiven = 0; \r\n    uint256 fee = 10;\r\n    uint256 holders = 0;\r\n\r\n    mapping(address => uint256) registeredAddress;\r\n\r\n  \r\n\r\n    function register(address addressToRegister) public {\r\n        if(registeredAddress[addressToRegister] == 0){\r\n            registeredAddress[addressToRegister] = block.timestamp;\r\n            holders++;\r\n        }\r\n    }\r\n\r\n    function withdraw() public holdersOnly{\r\n        address recipient = msg.sender;\r\n        \r\n        for(uint i= 0; i<transactions.length; i++){\r\n\r\n            if(transactions[i].timestamp >  registeredAddress[recipient]){\r\n                uint256 feeForRecipent = transactions[i].transactionFee \/ transactions[i].holders;\r\n                _transfer(address(this), recipient, feeForRecipent);\r\n            }\r\n        }\r\n\r\n        registeredAddress[recipient] = block.timestamp;\r\n    }\r\n\r\n    function transfer(address to, uint256 amount) override public  returns (bool) {\r\n        require(amount > 0, \"can't send 0 token\");\r\n        register(to);\r\n        address owner = _msgSender();\r\n        uint256 tokenFee = (amount * fee) \/ 100;\r\n        uint256 amountToTransfer =amount - tokenFee;\r\n        _transfer(owner, to, amountToTransfer);\r\n        _transfer(owner, address(this), tokenFee);\r\n        transactions.push(Transaction(block.timestamp, tokenFee, holders));        \r\n        return true;\r\n    }\r\n\r\n    modifier holdersOnly {\r\n      require(registeredAddress[msg.sender] != 0, \"you must be registered as holders\");\r\n      _;\r\n    }\r\n\r\n    function getAvailabeToken() public holdersOnly view returns (uint256){\r\n        uint256 total = 0;\r\n        \r\n        address recipient = msg.sender;\r\n        for(uint i= 0; i<transactions.length; i++){\r\n            if(transactions[i].timestamp >  registeredAddress[recipient]){\r\n                total += transactions[i].transactionFee \/ transactions[i].holders;\r\n            }\r\n        }\r\n        return total;\r\n    }\r\n\r\n    function isRegistered(address addressToCheck) public view returns (bool){\r\n        return registeredAddress[addressToCheck] != 0;\r\n    }",
-        "initialisation": "    fee = ${FEEFORTRANSACTION};\r\n        register(msg.sender);"
+        "FUNCTIONS": "    Transaction[] private transactions;\r\n    struct Transaction{\r\n        uint256 timestamp;\r\n        uint256 transactionFee;\r\n        uint256 holders;\r\n    }\r\n\r\n    uint256 totalfeeGiven = 0; \r\n    uint256 fee = 10;\r\n    uint256 holders = 0;\r\n\r\n    mapping(address => uint256) registeredAddress;\r\n\r\n  \r\n\r\n    function register(address addressToRegister) public {\r\n        if(registeredAddress[addressToRegister] == 0){\r\n            registeredAddress[addressToRegister] = block.timestamp;\r\n            holders++;\r\n        }\r\n    }\r\n\r\n    function withdraw() public holdersOnly{\r\n        address recipient = msg.sender;\r\n        \r\n        for(uint i= 0; i<transactions.length; i++){\r\n\r\n            if(transactions[i].timestamp >  registeredAddress[recipient]){\r\n                uint256 feeForRecipent = transactions[i].transactionFee \/ transactions[i].holders;\r\n                _transfer(address(this), recipient, feeForRecipent);\r\n            }\r\n        }\r\n\r\n        registeredAddress[recipient] = block.timestamp;\r\n    }\r\n\r\n    function transfer(address to, uint256 amount) override public  returns (bool) {\r\n        require(amount > 0, \"can't send 0 token\");\r\n        register(to);\r\n        address owner = _msgSender();\r\n        uint256 tokenFee = (amount * fee) \/ 100;\r\n        uint256 amountToTransfer =amount - tokenFee;\r\n        _transfer(owner, to, amountToTransfer);\r\n        _transfer(owner, address(this), tokenFee);\r\n        transactions.push(Transaction(block.timestamp, tokenFee, holders));        \r\n        return true;\r\n    }\r\n\r\n    modifier holdersOnly {\r\n      require(registeredAddress[msg.sender] != 0, \"you must be registered as holders\");\r\n      _;\r\n    }\r\n\r\n    function getAvailabeToken() public holdersOnly view returns (uint256){\r\n        uint256 total = 0;\r\n        \r\n        address recipient = msg.sender;\r\n        for(uint i= 0; i<transactions.length; i++){\r\n            if(transactions[i].timestamp >  registeredAddress[recipient]){\r\n                total += transactions[i].transactionFee \/ transactions[i].holders;\r\n            }\r\n        }\r\n        return total;\r\n    }\r\n\r\n    function isRegistered(address addressToCheck) public view returns (bool){\r\n        return registeredAddress[addressToCheck] != 0;\r\n    }",
+        "INITIALISATION": "    fee = ${FEEFORTRANSACTION};\r\n        register(msg.sender);"
     }
 }
