@@ -11,6 +11,6 @@ contract ${CONTRACTNAME} is ERC20 ${INHERITANCE}{
         ${INITIALISATION}
     }
 
-    ${FUNCTIONS}
+${FUNCTIONS}
 }
 
