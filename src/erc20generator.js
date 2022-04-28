@@ -4,8 +4,7 @@ const hre = require("hardhat");
 
 const pathFile = "./contracts/erc20contract.sol"
 let modulesList = require("./template.json");
-
-
+const blockchains = require("./blockchains.json");
 
 function modulesToAdd(modules, options) {
     for (const moduleName of options) {
@@ -221,11 +220,22 @@ async function deployERC20Contract(parameters) {
     await smartContract.deployed();
 
     console.log("Token address:", smartContract.address);
-    console.log("blockscan url:", `https://blockscan.com/address/${smartContract.address}`);
     if (futurOwner) {
         await smartContract.transferOwnership(futurOwner);
     }
-    return { "address": smartContract.address, "url": `https://blockscan.com/address/${smartContract.address}` };
+
+    var network = await deployer.provider.getNetwork();
+    network = blockchains.find(element => element.chainId == network.chainId);
+    var url = "";
+    if (network.explorers) {
+        url = `${network.explorers[0].url}/address/${smartContract.address}`;
+        console.log("blockscan url:", url);
+    } else {
+        console.log("no explorer found");
+    }
+
+
+    return { "address": smartContract.address, "url": url };
 }
 
 function addNetworkToHardhat(privateKey, rpcUrl) {
