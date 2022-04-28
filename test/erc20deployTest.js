@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const generator = require('../src/erc20generator.js');
-
+const fs = require('fs');
 //option available:
 //["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
 
@@ -32,8 +32,11 @@ describe("full erc20 contract test", function () {
             decimal: 18,
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"]
         };
-        token = await generator.deployERC20Contract(parameters);
-        token = token.contract;
+
+        const tokenInfo = await generator.deployERC20Contract(parameters);
+        const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
+        token = new ethers.Contract(tokenInfo.address, contract.abi, deployer);
+
         const borrowerTokenFactory = await ethers.getContractFactory("borrower");
         borrowerToken = await borrowerTokenFactory.deploy();
         await borrowerToken.deployed();

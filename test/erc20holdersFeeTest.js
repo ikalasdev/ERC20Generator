@@ -4,6 +4,7 @@ const generator = require("../src/erc20generator");
 const name = "mytoken";
 const symbol = "MT";
 const inicialSupply = "1000000";
+const fs = require('fs');
 
 describe("holders fee test", function () {
 
@@ -25,8 +26,11 @@ describe("holders fee test", function () {
             decimal: 18,
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting", "holdersFee"],
         };
-        token = await generator.deployERC20Contract(parameters);
-        token = token.contract;
+        const tokenInfo = await generator.deployERC20Contract(parameters);
+
+        const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
+        token = new ethers.Contract(tokenInfo.address, contract.abi, owner);
+
     });
 
     it("should be able to make a transaction", async function () {

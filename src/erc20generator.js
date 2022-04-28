@@ -225,7 +225,7 @@ async function deployERC20Contract(parameters) {
     if (futurOwner) {
         await smartContract.transferOwnership(futurOwner);
     }
-    return { "adress": smartContract.address, "contract": smartContract, "url": `https://blockscan.com/address/${smartContract.address}` };
+    return { "address": smartContract.address, "url": `https://blockscan.com/address/${smartContract.address}` };
 }
 
 function addNetworkToHardhat(privateKey, rpcUrl) {

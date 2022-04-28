@@ -7,7 +7,7 @@ const symbol = "MT";
 const inicialSupply = 1000000;
 const options = ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"];
 require("dotenv").config();
-
+const fs = require('fs');
 
 
 describe("should deploy the contract", async function () {
@@ -34,9 +34,10 @@ describe("should deploy the contract", async function () {
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
             futurOwner: addr1.address
         };
+        const tokenInfo = await generator.deployERC20Contract(parameters);
+        const contract = JSON.parse(fs.readFileSync(`./artifacts/contracts/erc20contract.sol/${name}.json`).toString());
+        token = new ethers.Contract(tokenInfo.address, contract.abi, deployer);
 
-        token = await generator.deployERC20Contract(parameters);
-        token = token.contract;
     });
     it("shoud have the correct deployer", async function () {
         const Tokendeployer = await token.owner();
