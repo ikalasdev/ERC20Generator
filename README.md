@@ -62,7 +62,9 @@ const parameters = {
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting", "holdersFee"],
             //if you have the holdersfee option you need to specify the fee
             feeForTransaction: "1",
+            //you can specify the network name if you decare it in the hardhat.config.js
             network: "smartchain",
+            // OR you can specify the rpc and the private key 
             privateKey: YOUR_PRIVATE_KEY,
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
             futurOwner: "0x324..",
