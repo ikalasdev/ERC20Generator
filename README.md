@@ -59,7 +59,7 @@ const parameters = {
             initialSupply: initialSupply,
             decimal: 18,
             //optional parameters
-            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting", "holdersFee"],
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
             //if you have the holdersfee option you need to specify the fee
             feeForTransaction: "1",
             //you can specify the network name if you decare it in the hardhat.config.js

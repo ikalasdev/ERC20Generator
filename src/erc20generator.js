@@ -9,6 +9,7 @@ const blockchains = require("./blockchains.json");
 function modulesToAdd(modules, options) {
     for (const moduleName of options) {
         const moduleToPush = modulesList[moduleName];
+        if (!moduleToPush) console.log(`module ${moduleName} not found`);
         if (!modules.includes(moduleToPush)) {
             modules.splice(moduleToPush.priority ? moduleToPush.priority : modules.length, 0, moduleToPush);
             if (moduleToPush.dependency) {
@@ -46,8 +47,13 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     }
 
     if (tax) {
-        modules.push(modulesList[`tax`]);
+        modulesToAdd(modules, [`tax`]);
     }
+
+    if (feeForTransaction) {
+        modulesToAdd(modules, [`holdersFee`]);
+    }
+
 
     var replacements = ["IMPORT", "INHERITANCE", "INITIALISATION", "SUPERCONSTRUCTOR", "FUNCTIONS"];
     for (const replacement of replacements) {

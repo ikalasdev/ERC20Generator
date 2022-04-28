@@ -24,7 +24,7 @@ describe("holders fee test", function () {
             inicialSupply: inicialSupply,
             feeForTransaction: "1",
             decimal: 18,
-            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting", "holdersFee"],
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
         };
         const tokenInfo = await generator.deployERC20Contract(parameters);
 
