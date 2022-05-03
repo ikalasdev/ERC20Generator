@@ -22,6 +22,9 @@ function modulesToAdd(modules, options) {
 
 
 function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSupply, decimal = 18, options = [], futurOwner, feeForTransaction, tax) {
+    if (name[0].match(/[0-9]/)) {
+        throw new Error("name must start with a letter");
+    }
 
     let contractName = name.replaceAll(" ", "");
 

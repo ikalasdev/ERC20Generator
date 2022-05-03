@@ -299,4 +299,15 @@ describe("check decimal", function () {
         expect(decimal.toString()).to.equal("9");
     });
 
+    it("should throw a error if the name start with a number", async function () {
+        const parameters = {
+            name: "1token",
+            symbol: "1",
+            inicialSupply: inicialSupply,
+            decimal: 9,
+            options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
+        };
+        await expect(generator.createERC20Contract(parameters), "name must start with a letter");
+    });
+
 });
