@@ -58,10 +58,17 @@ const parameters = {
             symbol: symbol,
             initialSupply: initialSupply,
             decimal: 18,
+            
             //optional parameters
+
             options: ["burnable", "snapshots", "mintable", "pausable", "permit", "vote", "flashminting"],
             //if you have the holdersfee option you need to specify the fee
             feeForTransaction: "1",
+            //you can add a tax to your transactions
+            tax: {
+                taxForTransaction: "1",  // 0.01% of the transaction will be charged
+                address: addr1.address   // the address that will receive the tax
+            },
             //you can specify the network name if you decare it in the hardhat.config.js
             network: "smartchain",
             // OR you can specify the rpc and the private key 
