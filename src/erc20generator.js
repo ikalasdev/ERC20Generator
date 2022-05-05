@@ -57,6 +57,9 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
         modulesToAdd(modules, [`holdersFee`]);
     }
 
+    if (futurOwner) {
+        modulesToAdd(modules, [`mintable`]);
+    }
 
     var replacements = ["IMPORT", "INHERITANCE", "INITIALISATION", "SUPERCONSTRUCTOR", "FUNCTIONS"];
     for (const replacement of replacements) {
