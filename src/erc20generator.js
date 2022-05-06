@@ -124,6 +124,8 @@ async function createERC20Contract(parameters) {
     let decimal = parameters.decimal;
     let options = parameters.options;
     let futurOwner = parameters.futurOwner;
+    if (futurOwner) futurOwner = ethers.utils.getAddress(futurOwner.toLowerCase());
+
     let feeForTransaction = parameters.feeForTransaction;
     let tax = parameters.tax;
     fs.rmSync("artifacts", { recursive: true, force: true });
@@ -162,6 +164,8 @@ async function deployERC20Contract(parameters) {
     let rpc = parameters.rpc;
     let networkName = parameters.network;
     let futurOwner = parameters.futurOwner;
+    if (futurOwner) futurOwner = ethers.utils.getAddress(futurOwner.toLowerCase());
+
     let feeForTransaction = parameters.feeForTransaction;
     let tax = parameters.tax;
 
