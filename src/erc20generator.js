@@ -95,8 +95,6 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
     const regex = /\${[A-Z]*}/g;
     template = template.replaceAll(regex, "");
 
-    // console.log(template);
-
     var fs = require('fs');
     var dir = './contracts';
     if (!fs.existsSync(dir)) {
@@ -128,7 +126,6 @@ async function createERC20Contract(parameters) {
 
     let feeForTransaction = parameters.feeForTransaction;
     let tax = parameters.tax;
-    fs.rmSync("artifacts", { recursive: true, force: true });
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction, tax);
     let nameFile = name.replaceAll(" ", "");
@@ -169,7 +166,6 @@ async function deployERC20Contract(parameters) {
     let feeForTransaction = parameters.feeForTransaction;
     let tax = parameters.tax;
 
-    fs.rmSync("artifacts", { recursive: true, force: true });
 
 
     const configText = fs.readFileSync('./hardhat.config.js').toString();
