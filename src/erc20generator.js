@@ -26,7 +26,7 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
         throw new Error("name must start with a letter");
     }
 
-    let contractName = name.replaceAll(" ", "");
+    let contractName = name.replace(/\s/g, "");
 
 
     if (!hre.config.solidity.compilers[0].version.match(/^[0-9]+\.(([8-9])|([1-9]([0-9])+))\..*/)) {
@@ -69,31 +69,31 @@ function createERC20ContractFile(name = "defaultName", symbol = "DN", inicialSup
                 sourceCodeToAdd += module[replacement];
             }
         }
-        template = template.replaceAll(`\${${replacement}}`, sourceCodeToAdd);
+        template = template.replace(`\${${replacement}}`, sourceCodeToAdd);
     }
 
 
     if (tax) {
-        template = template.replaceAll("${TAXFORTRANSACTION}", tax.taxForTransaction);
-        template = template.replaceAll("${ADDRESSTOSENDTAX}", tax.address);
+        template = template.replace(/\${TAXFORTRANSACTION}/g, tax.taxForTransaction);
+        template = template.replace(/\${ADDRESSTOSENDTAX}/g, tax.address);
     }
-    template = template.replaceAll("${OWNER}", futurOwner ? futurOwner : "msg.sender");
-    template = template.replaceAll("${FEEFORTRANSACTION}", feeForTransaction ? feeForTransaction : "1");
-    template = template.replaceAll("${CONTRACTNAME}", contractName);
-    template = template.replaceAll("${TOKENNAME}", name);
-    template = template.replaceAll("${TOKENSYMBOL}", symbol);
-    template = template.replaceAll("${INITIALSUPPLY}", inicialSupply);
-    template = template.replaceAll("${DECIMAL}", decimal);
+    template = template.replace(/\${OWNER}/g, futurOwner ? futurOwner : "msg.sender");
+    template = template.replace(/\${FEEFORTRANSACTION}/g, feeForTransaction ? feeForTransaction : "1");
+    template = template.replace(/\${CONTRACTNAME}/g, contractName);
+    template = template.replace(/\${TOKENNAME}/g, name);
+    template = template.replace(/\${TOKENSYMBOL}/g, symbol);
+    template = template.replace(/\${INITIALSUPPLY}/g, inicialSupply);
+    template = template.replace(/\${DECIMAL}/g, decimal);
 
     for (const module of modules) {
         if (module && module.replacement) {
             for (const key of Object.keys(module.replacement)) {
-                template = template.replaceAll("${" + key + "}", module.replacement[key] + `\${${key}}`);
+                template = template.replace("${" + key + "}", module.replacement[key] + `\${${key}}`);
             }
         }
     }
     const regex = /\${[A-Z]*}/g;
-    template = template.replaceAll(regex, "");
+    template = template.replace(regex, "");
 
     var fs = require('fs');
     var dir = './contracts';
@@ -128,7 +128,7 @@ async function createERC20Contract(parameters) {
     let tax = parameters.tax;
 
     createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction, tax);
-    let nameFile = name.replaceAll(" ", "");
+    let nameFile = name.replace(/\s/g, "");
 
     try {
         await hre.run('compile');
@@ -201,7 +201,7 @@ async function deployERC20Contract(parameters) {
 
     console.log("Account balance:", (await deployer.getBalance()).toString());
 
-    const smartContractFactory = await ethers.getContractFactory(name.replaceAll(" ", ""));
+    const smartContractFactory = await ethers.getContractFactory(name.replace(/\s/g, ""));
     const smartContract = await smartContractFactory.deploy();
 
     await smartContract.deployed();
