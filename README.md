@@ -71,9 +71,10 @@ const parameters = {
             },
             //you can specify the network name if you decare it in the hardhat.config.js
             network: "smartchain",
-            // OR you can specify the rpc and the private key 
+            // OR you can specify the the private key and (rpc or chainId)   
             privateKey: YOUR_PRIVATE_KEY,
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+            chainId: "0x38" // hex value must start with 0x or decimal value
             futurOwner: "0x324..",
 };
 ```

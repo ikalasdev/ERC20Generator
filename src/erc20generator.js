@@ -152,41 +152,13 @@ async function createERC20Contract(parameters) {
 
 //parameters name, symbol, inicialSupply, decimal, options, privateKey, rpc
 async function deployERC20Contract(parameters) {
+    parameters = init(parameters);
     let name = parameters.name;
-    let symbol = parameters.symbol;
-    let inicialSupply = parameters.inicialSupply;
-    let decimal = parameters.decimal;
-    let options = parameters.options;
-    let privateKey = parameters.privateKey;
-    let rpc = parameters.rpc;
-    let networkName = parameters.network;
     let futurOwner = parameters.futurOwner;
-    if (futurOwner) futurOwner = ethers.utils.getAddress(futurOwner.toLowerCase());
 
-    let feeForTransaction = parameters.feeForTransaction;
-    let tax = parameters.tax;
-
-
-
-    const configText = fs.readFileSync('./hardhat.config.js').toString();
-    if (!configText.includes("require(\"@nomiclabs/hardhat-waffle\");")) {
-        console.error("you must include hardhat-waffle in your hardhat.config.js");
-        return;
-    }
-    if (privateKey) {
-        if (rpc) {
-            networkName = addNetworkToHardhat(privateKey, rpc);
-        } else {
-            networkName = privateKey;
-        }
-    }
-    if (networkName) {
-        require("./networkSwitcher.js");
-        hre.changeNetwork(networkName);
-    }
-
-
-    createERC20ContractFile(name, symbol, inicialSupply, decimal, options, futurOwner, feeForTransaction, tax);
+    createERC20ContractFile(name, parameters.symbol, parameters.inicialSupply,
+        parameters.decimal, parameters.options, parameters.futurOwner,
+        parameters.feeForTransaction, parameters.tax);
 
 
     try {
@@ -214,7 +186,7 @@ async function deployERC20Contract(parameters) {
     var network = await deployer.provider.getNetwork();
     network = blockchains.find(element => element.chainId == network.chainId);
     var url = "";
-    if (network) {
+    if (network && network.explorers) {
         url = `${network.explorers[0].url}/address/${smartContract.address}`;
         console.log("blockscan url:", url);
     } else {
@@ -223,6 +195,50 @@ async function deployERC20Contract(parameters) {
 
 
     return { "address": smartContract.address, "url": url };
+}
+
+function init(parameters) {
+    if (parameters.futurOwner) parameters.futurOwner = ethers.utils.getAddress(parameters.futurOwner.toLowerCase());
+
+    if (parameters.privateKey) {
+        if (parameters.rpc) {
+            parameters.networkName = addNetworkToHardhat(parameters.privateKey, parameters.rpc);
+        } else if (parameters.chainId) {
+            let rpc = getRpcUrlByChainId(parameters.chainId);
+            parameters.networkName = addNetworkToHardhat(parameters.privateKey, rpc);
+        } else {
+            throw new Error("you must provide rpc or chainId");
+        }
+    }
+    if (parameters.networkName) {
+        require("./networkSwitcher.js");
+        hre.changeNetwork(parameters.networkName);
+    }
+
+    const configText = fs.readFileSync('./hardhat.config.js').toString();
+    if (!configText.includes("require(\"@nomiclabs/hardhat-waffle\");")) {
+        console.error("you must include hardhat-waffle in your hardhat.config.js");
+        return;
+    }
+    return parameters;
+
+}
+
+function getRpcUrlByChainId(chainId) {
+    if (chainId.startsWith("0x")) {
+        chainId = parseInt(chainId, 16);
+    }
+    var network = blockchains.find(element => element.chainId == chainId);
+    if (network) {
+        //if network is a array take the first one
+        if (Array.isArray(network.rpc)) {
+            return network.rpc[0];
+        } else {
+            return network.rpc;
+        }
+    } else {
+        throw new Error("no network found for chainId:", chainId);
+    }
 }
 
 function addNetworkToHardhat(privateKey, rpcUrl) {
