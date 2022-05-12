@@ -193,7 +193,7 @@ async function deployERC20Contract(parameters) {
         console.log("no explorer found");
     }
 
-
+    await verifyContract(network, smartContract.address, parameters.etherscanApiKey);
     return { "address": smartContract.address, "url": url };
 }
 
@@ -202,17 +202,17 @@ function init(parameters) {
 
     if (parameters.privateKey) {
         if (parameters.rpc) {
-            parameters.networkName = addNetworkToHardhat(parameters.privateKey, parameters.rpc);
+            parameters.network = addNetworkToHardhat(parameters.privateKey, parameters.rpc);
         } else if (parameters.chainId) {
             let rpc = getRpcUrlByChainId(parameters.chainId);
-            parameters.networkName = addNetworkToHardhat(parameters.privateKey, rpc);
+            parameters.network = addNetworkToHardhat(parameters.privateKey, rpc);
         } else {
             throw new Error("you must provide rpc or chainId");
         }
     }
-    if (parameters.networkName) {
+    if (parameters.network) {
         require("./networkSwitcher.js");
-        hre.changeNetwork(parameters.networkName);
+        hre.changeNetwork(parameters.network);
     }
 
     const configText = fs.readFileSync('./hardhat.config.js').toString();
@@ -258,6 +258,26 @@ function addNetworkToHardhat(privateKey, rpcUrl) {
     }
     hre.config.networks.network = network;
     return "network";
+}
+
+
+async function verifyContract(network, addressContract, apiKeyEtherscan) {
+    if (network && apiKeyEtherscan) {
+        require("@nomiclabs/hardhat-etherscan");
+        hre.config.etherscan = {
+            apiKey: apiKeyEtherscan
+        }
+        await hre.run("clean");
+        console.log("waiting 1mn for etherscan to be ready...");
+        await sleep(60 * 1000);
+        await hre.run("verify", {
+            address: addressContract
+        });
+    }
+}
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = { createERC20Contract, deployERC20Contract };

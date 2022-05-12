@@ -47,6 +47,10 @@ npx hardhat run .\mySuperScript.js --network mySuperBlockchain
 ```
 - or you can specify the network rpc and the private key in the fonction parameters
 
+## Verification
+you can specify in the parameters a etherscan api key to verify the contract and publish the source code on etherscan.io
+- work with polygonscan.com, bscscan.com... and their testnet. 
+
 ## Examples
 
 ```js
@@ -76,6 +80,9 @@ const parameters = {
             rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
             chainId: "0x38" // hex value must start with 0x or decimal value
             futurOwner: "0x324..",
+            //you can specify the etherscan api key
+            etherscanApiKey: "YOUR_API_KEY"
+
 };
 ```
 

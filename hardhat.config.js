@@ -1,7 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 
 require("dotenv").config();
-require("@nomiclabs/hardhat-etherscan");
 
 
 module.exports = {
@@ -14,9 +13,10 @@ module.exports = {
     mainetbsc: {
       url: `https://bsc-dataseed.binance.org/`,
       accounts: [process.env.PRIVATE_KEY]
+    },
+    polygon: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/KBBUDl6m0-m8bWd3GGWU-eniZKy1elh4`,
+      accounts: [process.env.PRIVATE_KEY]
     }
-  },
-  etherscan: {
-    apiKey: process.env.API_KEY
   }
 };
