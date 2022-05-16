@@ -131,6 +131,7 @@ async function createERC20Contract(parameters) {
     let nameFile = name.replace(/\s/g, "");
 
     try {
+        await hre.run("clean");
         await hre.run('compile');
     } catch (error) {
         console.log("cache error retry command if it fail");
@@ -162,6 +163,7 @@ async function deployERC20Contract(parameters) {
 
 
     try {
+        await hre.run("clean");
         await hre.run('compile');
     } catch (error) {
         console.log("cache error retry command if it fail");
