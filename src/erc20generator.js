@@ -195,7 +195,7 @@ async function deployERC20Contract(parameters) {
         console.log("no explorer found");
     }
 
-    await verifyContract(network, smartContract.address, parameters.etherscanApiKey);
+    await verifyContract(smartContract.address, parameters.etherscanApiKey);
     return { "address": smartContract.address, "url": url };
 }
 
@@ -263,23 +263,18 @@ function addNetworkToHardhat(privateKey, rpcUrl) {
 }
 
 
-async function verifyContract(network, addressContract, apiKeyEtherscan) {
-    if (network && apiKeyEtherscan) {
-        require("@nomiclabs/hardhat-etherscan");
-        hre.config.etherscan = {
-            apiKey: apiKeyEtherscan
-        }
-        await hre.run("clean");
-        console.log("waiting 1mn for etherscan to be ready...");
-        await sleep(60 * 1000);
-        await hre.run("verify", {
-            address: addressContract
-        });
-    }
-}
-
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+async function verifyContract(addressContract, apiKeyEtherscan) {
+    //create new child process
+    var cp = require('child_process');
+    const address = addressContract;
+    console.log(address);
+    const network = hre.network;
+    const privateKey = network.config.accounts[0];
+    const rpcUrl = network.config.url;
+    const child = cp.spawn('node',
+        ['./src/verification.js', address, apiKeyEtherscan, privateKey, rpcUrl],
+        { detached: true, stdio: ['ignore', 'ignore', 'ignore'] }
+    );
 }
 
 module.exports = { createERC20Contract, deployERC20Contract };
