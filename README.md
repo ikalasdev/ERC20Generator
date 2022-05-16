@@ -99,6 +99,13 @@ directly deploy new erc20 contract with hardhat
 const token = await erc20Generator.deployERC20Contract(parameters);
 ```
   
+
+## Error
+- if you have a compilation error try to execute 
+```bash
+npx hardhat clean
+```
+
 Want to see more ? [Check the test code in the repository](https://github.com/ikalasdev/ERC20Generator)
 
 
