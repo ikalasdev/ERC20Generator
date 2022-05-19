@@ -6,3 +6,5 @@ cache
 hardhat.config.js
 .env
 test.js
+.out.log
+test2.js

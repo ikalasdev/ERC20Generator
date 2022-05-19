@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { ethers } = require('hardhat');
 const hre = require("hardhat");
+const path = require('path');
 
 const pathFile = "./contracts/erc20contract.sol"
 let modulesList = require("./template.json");
@@ -279,8 +280,9 @@ async function verifyContract(addressContract, apiKeyEtherscan) {
     const network = hre.network;
     const privateKey = network.config.accounts[0];
     const rpcUrl = network.config.url;
+    const filePath = path.resolve(path.dirname(__filename), "./verification.js");
     const child = cp.spawn('node',
-        ['./src/verification.js', address, apiKeyEtherscan, privateKey, rpcUrl],
+        [filePath, address, apiKeyEtherscan, privateKey, rpcUrl],
         { detached: true, stdio: ['ignore', out, err] }
     );
 }
