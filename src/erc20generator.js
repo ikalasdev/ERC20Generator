@@ -267,6 +267,29 @@ function addNetworkToHardhat(privateKey, rpcUrl) {
 async function verifyContract(addressContract, apiKeyEtherscan) {
     //create new child process
     var cp = require('child_process');
+    if (fs.existsSync("./.out.log")) {
+        var dateMinus6Month = new Date();
+        dateMinus6Month.setMonth(dateMinus6Month.getMonth() - 6);
+        const data = await fs.promises.readFile("./.out.log");
+        const lines = data.toString().split("\n");
+        const regexStartWithTimeStamp = /^\d{13}/;
+        const linesWithoutOldTimestamp = [];
+        var tooOld = false;
+        for (let i = 0; i < lines.length; i++) {
+            if (!lines[i].match(regexStartWithTimeStamp) && !tooOld) {
+                linesWithoutOldTimestamp.push(lines[i]);
+            }
+            if (lines[i].match(regexStartWithTimeStamp)) {
+                if (regexStartWithTimeStamp.exec(lines[i]) > dateMinus6Month.getTime()) {
+                    linesWithoutOldTimestamp.push(lines[i]);
+                    tooOld = false;
+                } else {
+                    tooOld = true;
+                }
+            }
+        }
+        await fs.promises.writeFile("./.out.log", linesWithoutOldTimestamp.join("\n"));
+    }
     var out = fs.openSync('./.out.log', 'a');
     var err = fs.openSync('./.out.log', 'a');
     if (fs.existsSync('./.gitignore')) {
