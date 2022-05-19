@@ -1,6 +1,6 @@
 {
   "name": "@ikalasdev/erc20generator",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "package npm qui permet de déployer un contrat erc20 personnalisé.",
   "main": "src/erc20generator.js",
   "scripts": {

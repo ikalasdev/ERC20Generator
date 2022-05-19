@@ -266,14 +266,22 @@ function addNetworkToHardhat(privateKey, rpcUrl) {
 async function verifyContract(addressContract, apiKeyEtherscan) {
     //create new child process
     var cp = require('child_process');
+    var out = fs.openSync('./.out.log', 'a');
+    var err = fs.openSync('./.out.log', 'a');
+    if (fs.existsSync('./.gitignore')) {
+        if (!fs.readFileSync('./.gitignore').toString().includes('.out.log')) {
+            fs.appendFileSync('./.gitignore', '\n.out.log');
+        }
+    } else {
+        fs.writeFileSync('./.gitignore', '.out.log');
+    }
     const address = addressContract;
-    console.log(address);
     const network = hre.network;
     const privateKey = network.config.accounts[0];
     const rpcUrl = network.config.url;
     const child = cp.spawn('node',
         ['./src/verification.js', address, apiKeyEtherscan, privateKey, rpcUrl],
-        { detached: true, stdio: ['ignore', 'ignore', 'ignore'] }
+        { detached: true, stdio: ['ignore', out, err] }
     );
 }
 

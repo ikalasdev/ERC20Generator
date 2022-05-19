@@ -7,7 +7,9 @@ async function verifyContract(addressContract, apiKeyEtherscan) {
             apiKey: apiKeyEtherscan
         }
         await hre.run("clean");
+        console.log(Date.now(), " - verification : waiting for etherscan...");
         await sleep(60 * 1000);
+        console.log(Date.now(), " - verification : start verification...");
         await hre.run("verify", {
             address: addressContract
         });
