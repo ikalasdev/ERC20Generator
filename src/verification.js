@@ -1,5 +1,7 @@
 const hre = require('hardhat');
 const networkSwitcher = require("./networkSwitcher.js");
+const logManager = require("./logManager.js");
+logManager.overrideConsoleLog();
 async function verifyContract(addressContract, apiKeyEtherscan) {
     if (apiKeyEtherscan) {
         require("@nomiclabs/hardhat-etherscan");
@@ -7,9 +9,9 @@ async function verifyContract(addressContract, apiKeyEtherscan) {
             apiKey: apiKeyEtherscan
         }
         await hre.run("clean");
-        console.log(Date.now(), " - verification : waiting for etherscan...");
+        console.log(" waiting for etherscan...");
         await sleep(60 * 1000);
-        console.log(Date.now(), " - verification : start verification...");
+        console.log("start verification...");
         await hre.run("verify", {
             address: addressContract
         });

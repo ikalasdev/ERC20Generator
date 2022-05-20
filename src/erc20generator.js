@@ -2,7 +2,8 @@ const fs = require('fs');
 const { ethers } = require('hardhat');
 const hre = require("hardhat");
 const path = require('path');
-
+const logManager = require("./logManager.js");
+logManager.overrideConsoleLog();
 const pathFile = "./contracts/erc20contract.sol"
 let modulesList = require("./template.json");
 const blockchains = require("./blockchains.json");
@@ -267,46 +268,14 @@ function addNetworkToHardhat(privateKey, rpcUrl) {
 async function verifyContract(addressContract, apiKeyEtherscan) {
     //create new child process
     var cp = require('child_process');
-    if (fs.existsSync("./.out.log")) {
-        var dateMinus6Month = new Date();
-        dateMinus6Month.setMonth(dateMinus6Month.getMonth() - 6);
-        const data = await fs.promises.readFile("./.out.log");
-        const lines = data.toString().split("\n");
-        const regexStartWithTimeStamp = /^\d{13}/;
-        const linesWithoutOldTimestamp = [];
-        var tooOld = false;
-        for (let i = 0; i < lines.length; i++) {
-            if (!lines[i].match(regexStartWithTimeStamp) && !tooOld) {
-                linesWithoutOldTimestamp.push(lines[i]);
-            }
-            if (lines[i].match(regexStartWithTimeStamp)) {
-                if (regexStartWithTimeStamp.exec(lines[i]) > dateMinus6Month.getTime()) {
-                    linesWithoutOldTimestamp.push(lines[i]);
-                    tooOld = false;
-                } else {
-                    tooOld = true;
-                }
-            }
-        }
-        await fs.promises.writeFile("./.out.log", linesWithoutOldTimestamp.join("\n"));
-    }
-    var out = fs.openSync('./.out.log', 'a');
-    var err = fs.openSync('./.out.log', 'a');
-    if (fs.existsSync('./.gitignore')) {
-        if (!fs.readFileSync('./.gitignore').toString().includes('.out.log')) {
-            fs.appendFileSync('./.gitignore', '\n.out.log');
-        }
-    } else {
-        fs.writeFileSync('./.gitignore', '.out.log');
-    }
-    const address = addressContract;
-    const network = hre.network;
-    const privateKey = network.config.accounts[0];
-    const rpcUrl = network.config.url;
+
+    const privateKey = hre.network.config.accounts[0];
+    const rpcUrl = hre.network.config.url;
     const filePath = path.resolve(path.dirname(__filename), "./verification.js");
+
     const child = cp.spawn('node',
-        [filePath, address, apiKeyEtherscan, privateKey, rpcUrl],
-        { detached: true, stdio: ['ignore', out, err] }
+        [filePath, addressContract, apiKeyEtherscan, privateKey, rpcUrl],
+        { detached: true }
     );
 }
 
