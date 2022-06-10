@@ -1,5 +1,6 @@
 # ERC20Generator
 
+> This package is used here https://ikalas.com/app/create-token-on-bsc
 
 ## Installation
 
@@ -105,6 +106,12 @@ const token = await erc20Generator.deployERC20Contract(parameters);
 ```bash
 npx hardhat clean
 ```
+
+
+## Logs
+
+the lib will log the events in the file `erc20generator.log`
+
 
 Want to see more ? [Check the test code in the repository](https://github.com/ikalasdev/ERC20Generator)
 

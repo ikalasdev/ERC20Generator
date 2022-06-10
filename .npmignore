@@ -8,3 +8,4 @@ hardhat.config.js
 test.js
 .out.log
 test2.js
+erc20generator.log
